@@ -1,0 +1,20 @@
+JD-EDM
+     Handler/Edm:获取用户输入并校验，将校验过的任务信息，存入redis任务队列（LIST类型）
+     Config: 基础配置信息，网关信息配置，Gearman任务调度配置，redis配置,任务队列获取或存储配置等
+     Deamon: 任务分发脚本。 	
+	Dispatcher: 将redis任务队列取出分配与worker使用。 Gearman->Client
+		    客服端数量与sms、push略不同。 采用pcntl_fork出相对应的子进程数量，完成多客户端。具体控制在Config下可配置.
+	Worker: 将获得的redis任务队列信息解析。通过socket方式传递至配置的邮件服务器(192.168.17.16:25 smtp邮件服务).   
+     Logs: 日志信息.
+     Modules:Mailer:将worker获取的信息加密信息，通过套接字传递至邮件服务器并返回处理结果
+ 	     Pipeline:Redis链接，存储、获取redis任务队列.
+	     Validator: 验证邮件格式是否正确，将正确的邮件格式信息传递至后方存储，不合格直接过滤。
+     Util->Logger: 写日志信息类。
+     Util->Daemon: 进程管理类（子进程的forker, 以及信号的安装等。）
+
+
+EDM
+  RPC服务： 入口地址APP_PATH/Dashboard/rpc.php 
+	    主目录APP_PATH/Dashboard/Rpc
+		AuthClient（认证客户端：那些业务可以调度我的服务并设定其所能使用的方法权限。）
+		RpcEdm：服务提供。

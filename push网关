@@ -1,0 +1,101 @@
+实际功能：App客户端的通知消息
+
+
+主要的功能：1 分两种不同的推送请求实现相应的异步请求任务 将任务保存至redis是第一阶段工作完成， 后续应有相应的work处理调度处理.
+	    
+            2 TAG操作：
+		首先判断uid以及tag是否符合格式，打入的tag是否超过最大的tag数。 获取uid—key。写入参数的组装写入redis
+		去除tag，相应的操作。
+		
+	    3 用户信息查询
+		获取用户的标签：获取uid，验证，获取Redis中所有该uid的tag标签
+		用户活跃设备：获取uid,验证，根据uid获取登录设备的Redis key。prefix:push_gateway_user_devices_ . uid
+			      hash数据类型。获取后判断登录时间与物理设备号的映射关系组装返回信息
+		用户上次登录设备：同上， 相差不大，key不同： prefix:push_gateway_user_last_device . uid
+		查询设备下登录的用户：同样的操作，区别与redis_key  prefix:push_gateway_device_users . 供应商 . 设备号		
+
+	    4 日志追踪：
+		获取关键字与时间段等信息在服务器日志中查询相应的日志信息并返回。
+	    5 接口查询：
+		设备所有信息查询：
+			这个好像是第三方提供：http://device.jpush.cn/v3/devices/设备号   get请求方式
+		查询状态报告(根据日志)：
+			同日志追踪。
+		查询状态报告(根据msg_id):
+			也是第三方提供：https://report.jpush.cn/v3/received/  https://report.jpush.cn/v3/messages PROD环境 PUB https://device.jpush.cn/v3/messages get请求方式  msg_ids => $value
+		查询别名下的设备：
+			第三方提供自取： https://device.jpush.cn/v3/aliases/{$heng} get方式.
+
+
+
+1 统一的入口文件:Pushgateway/intternal.php    主控制器：MqGateway
+
+	Controller:控制类  Cron:定时脚本  Daemon:处理功能worker  Module:数据处理吧 		
+	
+		JobDispatcher:: 将redis中的队列信息按相应的处理大小取出 （gearman CLIENT）
+		JobHandler::  将取出的队列信息经过Pushproxy处理	  (gearman Worker)
+		Statistics**:: BI相关吧 = = 
+
+
+	提交处理的控制类方法在Gateway.class.php
+	MqGateway.class.php   用户登录时：标记用户状态，守护进程返回相应标签信息与设备上同步并记录同步数据    推出时：取消用户登录状态标记。 并删出最后登录设备的值 将现有设备存储在最后登录设备。  获取登录或退出信息转至gateway.php中的login or outlog处理
+	同步： 将该异步任务的所有标签取出后，删除指定设备上的所有标签，再将提取出的标签重新添加到该设备中。	
+
+
+	
+	两种推送请求，在经过校验之后  都会存入在redis集群  
+		默认的redis实例： db:12 master:127.0.0.1:6379
+		第三方app数据存储：db:11 master:127.0.0.1:6379
+		异步任务队列：db:12 master:同上。
+
+2 工具入口地址：/Tool/Public/index.php
+	Tool工具 Public视图入口及css,js,image View视图界面模板  Module:工具Model类：一般都是传递数据至push接口处理返回数据或查询本地日志文件结果并返回。Controller类： 控制器基类，登录入口类，主控制类。
+
+	
+
+Provider: 根据thrift生成的rpc服务
+
+Logs: 日志文件目录
+
+Frameworks:JMWEB框架
+
+Commons: AsyncLayer：将异步队列任务信息存储至redis
+	 Community: 不清楚， 感觉好像调用rpc服务
+	 Helper: GlobarVar:全局变量设置   Util: tool工具中模板通用的方法
+	 Limits: 接口限速
+	 Logger: 写日志类方法
+	 Push:   各供应商相对应封装的API接口
+		PushProxy : 给予我们服务与供应商API的使用对接， 隐藏使用供应商API的细节
+		PushServerBase : 第三方服务抽象基类，提供一些通用的方法，
+ 		Ali :阿里供应服务， 它们将推送的细节封装在自己的SDK中
+	    	GT:  个推， 街电调用、ios调用
+		MI:   小米
+		J :   极光
+	 Report: 状态报告统计相关
+	 Requestor:  网络请求类CurlRequestor  与消息中心请求MemanRequestor
+	 SDK: 有些供应商自己使用自己的接口自提供SKD
+	 User: 回去redis key等信息 或设置
+	 Validator: 数据校验类 数字校验UID 标签校验tag url校验
+
+scripts: 任务类脚本
+	 check.php: 数据检测脚本。 redis中是否能获取到任务队列信息  mysql中是否同样能获取到
+	 FixTagsBySortedStars.php: 修复Tags  逻辑不怎么能懂   根据用户添加的star？？？ 
+	 FixTagsOfUsers.php:  同上 好像是多进程的 好复杂
+	 GetFollowersFromFile.php:
+	 GetStarsSortedFromFile.php:
+	 SyncTags.php:
+
+
+
+Tests: API测试脚本，RPC测试脚本
+
+
+三种推送方式：1 按tag推送    调用现有所有第三方平台接口按照tag的方式推送
+	      2 按user推送   调用现有所以第三方按指定用户user的方式推送(不是用户ID 好像是设备注册号)
+	      3 全量推送     调用所有平台进行全量推送！！！！   很危险！！！
+              
+全量发送任何时候都要去测试。这个一定要绷紧弦～！！！！！！！！！！！！！！！！！！！！！！！
+
+
+JD-PUSH:
+	与现阶段使用相同（配置不同，机房不同，配置环境PROD-AWS）

@@ -1,0 +1,222 @@
+
+PHP5.4之后有内置一个服务器（不能用与线上，无需构建本地服务）php -S HOST_IP -t 指定目录
+
+递归： 自己调用自己，自己包含自己   function a( param b) { a(param c);} 属于函数内再次调用自己
+      注意：1 递归是函数在过程中或函数里面调用自身
+	    2 在使用递归时 必须要有一个明确的递归结束条件，成为递归出口
+      两个阶段：1 递推：把复杂的问提的求解推到比原问题简单一些的问题的求解;
+		2 回归：当获得最简单的情况后，逐步返回，依次获得复杂的解
+
+迭代： 将输出做输入，再次进行处理。迭代次数越多，细节都越高（A 不停调用B）
+ 	递归忠一定有迭代，反之不然， 大部分可以相互转换，能用迭代的不用递归（递归效率有点低，浪费空间，并容易造成堆栈的溢出）
+
+
+高阶函数： 最常见使用策略模式
+
+call_user_func_array(callable $callback,array()) 调用回调，并把一个数组作为参数.
+        也可以以对象静态方法作为callback， example : call_user_func_array(array('classname','func'),array(data));
+
+
+
+Xdubug  代码调试工具（相比于echo print 等断点， 在不熟悉代码的情况下效率更高）默认端口9000 建议重置
+    修改php.ini： [xdebug] xdebug.remote_port = ip_port
+	记得xdebug的端口是否可用与重复  phpstrom内置web application端口问题等
+
+依赖管理Composer与packagist
+packagist 安装一般为pear(php-pear   使用现在较少)
+
+
+composer .json文件配置说明  name : "所有者/包名"
+			   description : "包描述  通常一句话"
+			   keywords : "包作用关键字 利于检索"
+       基本信息：	   homepage: "包主页或个人主页"
+			   time :"发布时间"
+			   license : 决定公开发布的许可证［MIT］
+    			   authors : {作者数组，新名，邮箱，主页等信息}
+
+
+	依赖管理：	  require : {组件对象， 所有者/包名 ： 版本号信息 等}
+
+	开发依赖：	  require-dev: {}  开发环境使用组件  生产环境不需要使用.
+
+ 	自动加载：          Vendor/autoload.php  自动加载文件(Vendor外目录运用命名空间可以在这里添加)
+
+			  config : 自定义Vendor目录位置    默认当前目录下
+
+     			  repositories : {package位置、类型等}
+
+			  scripts: 运行脚本  install scripts \ update scripts
+
+
+                          自动添加包  composer require content 然后update
+
+nowdoc与heredoc区别
+  	nowdoc :   $test = <<<'EOD'
+			AAAAAA.
+			BBBBBBBBB.
+			CCCCC.
+			$sth DDDDDD.
+		   EOD;    $sth不会以变量的形式所解析
+	heredoc:   $test = <<<EOD
+			    AAAAA.
+			    BBBBBBB.
+			    CCCC.
+			    $sth DDDDD.
+			   EOD;   $sth会被解析
+	
+
+
+ 	现定义固定长字符串再输出会比直接输出多占用一倍的内存！！！！！！！
+
+
+使用UTF8编码（未在底层实现怼Unicode的支持）
+ 	WEB应用从三个方面入手。1 HTML 2 SQL 3 PHP
+ 	PHP层面的使用：对于字符串操作（有些是不会影响的），如果该函数有mb_*扩展过的用法，使用mb_*。
+		      或者脚本开头使用mb_internal_encoding()，然后在对浏览器输出的脚本中使用mb_http_output().
+	另外：字符串操作如能指定指定编码集最好指定.
+
+	数据层面：数据库设计时指定编码集为UTF8MB4。  并在链接数据库请求时也使用相同的编码集.
+
+	浏览器层面：脚本输出使用mb_http_output()确保输出格式.
+		    html head 标签指定页面编码<meta >中 Content-type charset
+
+复杂语法： {$params}
+
+
+满二叉树： 每个节点有且仅有两个字节点。
+
+
+完全二叉树： 深度为K 有N个节点。 当且仅当其每个节点都与深度为K的满二叉树中序号为1至n的节点对应。
+
+
+冒泡排序：   轮询两个，比较大小，交替位置。
+
+快速排序：   以任一元素作为基准，对比分为两个区域，比他大的与小的，递归的排寻出两个分区。 组合
+
+归并：       分治法  将问题分解， 子问题的解的合并即问题的解。
+	    
+堆排序：    最大堆与最小堆。 
+	    首先：对数据进行依次二叉排 找出最大或最小。  然后进行递归。
+
+选择排序：   不是稳定的排寻算法， 数据大时， 因为可能交换操作的原因，占用较大的CPU。 n小的时候比冒泡快
+	    时间复杂度O(n2);
+
+插入排序：   假定有一个子序列已经排序完成。 将后续与之比较，并运行。
+ 
+希尔排序：   首先分组进行插入排序， 在分组插入排序， 最后重组。(d1 => n/2,d2 => d1/2,d3 = d2/2 ...1）
+
+
+打开文件读的方法：
+      1 fopen($file, "r+a")  打开一个文件或url. 返回一个对文件本身的引用
+        feof($fp) 参数：文件引用。 判断是否读取到文件的最后。
+        fclose($fp)  关闭文件引用 释放资源
+        fgets($fp, $font-size)  获取文件中的一行内容， 不会超过font-size的大小。  适用读取文本型文件
+	freads($fp,$bytesize)   读取二进制文件， 因二进制文件没有行的概念必须指定$bytesize(max 8Kb)
+
+      2 跳跃访问： fseek($fp, 0 ,$pose);
+
+
+文件写方法：
+	fopen($file, "w+a")
+	fwrite($fp,$data);
+	fclose($fp);
+
+xml结构
+     <?xml version="1.0"  encoding="字符编码" ?>
+     有且仅有一个最顶层节点 类似余html中 <html></html>
+        中间包含任一标签节点。  注意闭合。
+    
+
+grep : 查找文件或命令结果中匹配表达式命中的行结果 。 
+     grep -i  忽略表达式大小写的形式
+     grep -r/-R  递归的在某个中的所有文件查询  -h 禁止文件路径的显示
+     grep -w  返回包含指定表达式的结果。  -c   返回命中的次数   -n 命中目标的所在行数  
+	  -v  反转匹配（不匹配）  -l 返回包含匹配式的文件
+
+
+shell_exec($shell_command)    返回值：命令执行结果。
+
+取地址符&:   php中&符号的含义为一个变量或函数或对象的别名。 当建立别名后不管是unset(别名or原量)都只是删除了他们之间的别名链接。并没有删除原有的地址空间，内容还存在。 在函数中使用别名引用变量， 若在函数内别名值改变， 对应的原量也会改变（毕竟指向同一内存空间）。  此时使用函数是不可在别名位置传递常量。因为只有变量才能被引用。
+
+date()时间格式'Y-m-t'：  返回当月的最后一天。
+
+getopt():  从命令行参数列表中获取选项。 ex: $data = getopt($options,$longopts,$optind)
+           $options:  单个字符a-zA-Z0-9: . 参数传递时：-a-zA-Z0-9=value;
+	   $longiots: 选项数组。 每个元素会被最为选项字符串。  匹配：--string=value;
+
+array_shift($array):  移出数组$array中的第一个素。 返回第一个元素的值.
+
+array_diff($arr1,$arr2) : 计算数组的差值。  
+
+list($param1, $param2 ...) = array($value1,$value2 ...) 注意list()不是真真意义的函数而是一种语言结构，将数组的至分配至相应的变量中去  
+
+urlencode(): 将中文字符转换为urlencode格式，数字、阿拉伯字符不会被转换
+
+http_build_query():将数组中的键值转换为http请求中的数据请求格式。
+
+array_chunk($array,$size): 将数组分隔为多个数组，数组大小为size
+
+
+
+RPC 远程调用服务(Remote Procedure Call Protocol)：成熟框架Thrift、duddo等。（JUMEI：PHP-CLIENT）
+   1  本地客服端以本地调用服务的方式调用远程服务。
+   2  客服端rpc服务接受到调用后将方法、参数等信息封装成能够进行网络传输的消息体。
+   3  找到相对应的服务地址后，将信息加密传输至服务端。
+   4  服务端接受消息后解密。
+   5  根据解码信息调用server上的本地服务
+   6  执行并将结果返回给server
+   7  server将结果打包加密发送至消费方
+   8  client接受消息解密。
+   9  服务方获取最终结果.
+     RPC的目标是对2-8的封装。
+         难点  1  消息体的序列化与反序列化（加密解密二进制，毕竟网络通信）
+               2  明确规范消息数据结构
+	       3  通信。  通信模型：BIO，NIO  需都支持.
+		  BIO通信方式： 没一个请求添加一个进程，当进程达到上限时，后续请求将会排队等待（同步阻塞？？？？？？？？）
+  		  NIO通信方式： 分而治之。尽可能的任务分细，让每个进程都能满载和满效率的使用。
+			主要分为：mainReactor线程负责监控server_socket,accept新链接。subReactor负责多路分离已链接的socket（可以单一进程，可以进程池，取决于CPU核数），做后worKer。
+
+   	       4  如何确保客服端所接受的返回信息是自己所需要的结果。
+		    1 客服端请求RPC服务是产生一个基于当前socket的唯一uid.
+		    2 对于请求结果调用回调函数，存放到全局方法中，根据uid处理
+ 	            3 对于回调函数中，当前进程试图使用uid获取返回结果，如无则等待。 回调锁？ 什么鬼？
+		   
+
+mcpd: redis本地连接池。
+
+
+聚美RPC服务使用：
+	对于业务构建RPC服务： 继承与JMRpcServer类。 建立相应的入口文件。
+			     建立AuthClient认证文件夹： 继承JMRpcServerAuthClientUser()验证Secret,设定可以访问的类与方法   规范 filename_classname::methodname/* 。 建立相应的文件与类文件。 写入绑定的方法，给定参数，运行，返回运行结果。
+
+
+	使用：   根据PHPClient组件中的Config文件。  配置所需调用的rpc服务
+
+
+对于apt安装软件包：
+  apt-cache search packagename 搜索指定名称的软件包
+  apt-cache show packagename 获取相关包的相关信息
+  apt-get install package  安装软件包
+  apt-get install package --reinstall 重新安装
+  apt-get -f install 修复安装 -f == --fix-missing
+  apt-get remove package 卸载一个已安装的软件包（保留配置文件）
+  apt-get check 检查是否有已损坏的依赖
+  apt-get remove package --purge 删除包包括配置文件等
+  apt-get update 更新源
+  sudo apt-get upgrade 更新已安装的包
+  apt-get dist-upgrade 升级系统的内核
+  apt-get dselect-upgrade 升级方式为dselect
+  apt-get build-dep package 安装相关的编译环境
+  apt-get source package 下载软件包源代码
+  apt-get autoclean  已转已卸的软件备份至硬派
+  apt-get clean && autoclean 清理无用的包
+  apt-cache depends package 了解使用依赖
+  apt-cache rdepends package 查看该包被那些包依赖
+  apt-cache dumpavail 打印可用软件包列表
+  dpkg -L package 列出软件包中的所以文件
+  dpkg -force-all --purge packagename 卸载难以卸载的软件
+  dpkg -I package-name-pattern  
+  
+
+
+

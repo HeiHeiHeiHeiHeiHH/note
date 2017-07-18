@@ -1,0 +1,230 @@
+首先shell脚本第一行必须指定脚本解释器。
+类型：Bsh、Csh、Ksh、Bash、Zsh
+  #!/bin/bash or #!/bin/sh 等。
+  shell脚本中，以#作为注释  注：没有多行注释  多行每行前加#
+ 
+一个完整的shell脚本应包含作者：Author  脚本描述description:  历史信息：History 等
+example:
+  #!/bin/bash
+  #Author : zhongqil
+  #Description : 脚本作用描述
+  #History : the version 0.1
+  #Script Start :
+
+  ...... 
+
+
+最好在脚本的开始定义PATH
+    export PATH = /bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+
+如果有些命令没有添加到系统的PATH路径下，这该命令的所在路径添加至上面的命令后
+
+定义变量：
+   varname="value"(变量名与等号之间不能有空格)
+使用变量：
+   $varname (在定义过的变量前加美元符号$) or 加边界${varname}
+重定义变量与定义变量相同，注：不要加美元符号。
+
+字符串： 可以使用单引号或双引号  也可以不带
+	单引号： 所有字符原样输出  里面的变量无效
+		不能出现单引号，即使使用了转意也不行
+        双引号：与php一样。
+
+拼接字符串： "lll $varname sdasd"  or "lll${varname}sss"
+获取字符串长度： string='sadasdasda'  echo ${#string}
+截取子字符串：string = 'dsadasdasdsadas' echo ${$string:start:end}
+
+控制流程不能为空～～～～
+注意：shell中 []是可执行程序 所以一般在[]之后之前必须有空格
+
+if condition 
+then
+	command1
+	command2
+	...
+fi    or if condition ; then command 1  ;fi
+#####
+if condition
+then 
+	command1
+	command2
+	...
+else
+	command1
+fi
+####
+if condition1
+then 
+	command1
+elif condition2
+	command2
+else
+	command3
+fi
+########
+for var in item1 item2 ... itemN
+do
+	command1
+	command2
+	command3
+	...
+done
+###C风格###
+for((exp1;exp2;exp3))
+do
+	command1
+	command2
+	command3
+	...
+done
+######
+while condition
+do
+	command
+done
+####无限循环###
+while :
+do 
+	command
+done
+
+or 
+while true:
+do
+	command
+done
+or 
+for((;;))
+do
+	command
+done
+####until####
+until condition
+do
+	command
+done
+###case####
+case "$varname" in
+	value1 ) #====：
+		do sth
+		exit
+	;;
+	value2 )
+		do sth1
+		exit
+	;; #这表示break
+	"Exit" )
+		exit
+	;;
+	* ) echo sth
+esac
+
+####
+source与.是等效的
+
+如何获取问加绝对路径：
+
+
+用户输入：执行脚本时传入
+	  脚本运行试输入
+	  select菜单
+	  stdin and stdout
+	
+
+常用命令：
+
+ps(查看进程列表):查看当前那些进程的快照， 动态显示进程信息使用top工具
+  进程5种状态：运行(正在运行或在运行队列中等待)、中断（休眠，受阻或等待某种条件或接受信号）、不可中断、僵死（进程已终止，但进程描述存在）、停止。
+  标记5种状态码：D：不可中断。R：运行。S：中断。T：停止。Z：僵死
+
+  命令参数：
+	a 显示所以进程
+	-a 显示同一终端下的所有程序
+	-A 显示所有进程
+	c 显示进程的真实名称
+	-N 反向选择
+	-e ==-A
+	e  显示环境变量
+	f 显示进程间的关系
+	-H 显示树状结构
+	r 显示当前终端的进程
+	T 显示当前终端的所有进程
+	u 指定用户的所以进程
+	-au 显示较详细的资讯
+	-aux 显示所以包含其他使用者的进程
+	-C<command> 列出指定命令的状况
+	--lines <numbers> 每页显示的行数
+	--width <bytenum> 每页显示的字符数
+	--help 
+	--version
+	-o 输出指定的字段
+
+grep(排除grep自身，查找target相邻的结果):
+	成功 => 0
+	不成功 => 1
+	文件不存在 => 2
+
+   grep规则表达式：
+	^pattern  以表达式开头的行
+	pattern$  以表达式结束的行
+	. 匹配一个任意非换行符的字段
+	* 匹配0个或多个先前字符 
+	.* 代表任意字符
+	[] 指定范围
+	[^] 不在指定字符范围内的字符
+
+awk（对文本或数据进行分析）: awk脚本由模式和操作组成
+  语法形式：awk [options] 'script' var=value file(s)
+	   awk [options] -f scriptfile var=value file(s)
+
+  常用命令选项：
+	-F fs指定输入分隔符，fs可以是字符串或正则表达式
+   	-v var=value 赋值一个用户定义变量，将外部变量传递给awk
+	-f scriptfile 从脚本文件中读取awk命令
+	-m[fr] var 对val值数设置内在限制
+  模式：正则表达式、关系表达式、模式匹配表达式、bengin\pattern\end语句块
+  操作：变量或数组赋值、输出命令、内置函数、控制流
+
+  awk基本结构：awk "BENGIN{ commands } PATTERN{ commands } END { commands }' FILENAME
+	BENGIN语句块：数据或文本处理的预处理准备，在输入之前被执行，可选，比如变量初始化、打印开始信息等
+	
+	END语句块：当读至输入流末尾时，执行。
+	
+	PATTERN语句块：将输入流中的中读取一行数据 处理commands ，并重复 直至读完
+	语句块中，以双引号作为拼接符号使用
+	  [NR]:读取输入流的第几行
+	  [NF]:该行有多少个字段
+	  [$n]:该行的第n个字段的值  最后一个字段的至$NF  相应的操作就会有$NF-N倒数第N个字段
+	  next语句：相当于c or php中的continue
+
+sed: 文本处理工具  配合正则表达式使用
+	命令格式： sed [options] 'command' file(s)
+		   sed [options] -f scriptfile file(s)
+
+xargs: 给其他命令传递一个过滤器
+       xargs 默认将输入流输出为一行
+       xargs -n$num 没行输出$num个数据段
+       xargs -dX 定义一个定界符X
+       多个选项可以一起配合使用 如：xargs -dX -n2 
+
+curl: 
+
+
+shell运行中参数的处理方式：
+	手工处理方式:需要明确有多少个变量$0指向脚本命令$1第一个参数 类推   $#参数的个数不包含命令本身
+	getopts： 不支持长选项格式   如 --a-string=args 不支持 不过bash内置。
+	getopt： c提供。 支持长选项与短选项
+
+将命令执行结果赋值与变量：
+	$(command)
+
+
+[[ $# -lt 1 ]] 输入参数个数与某个值相比较  -lt 小于 -gt 大于
+[[ ! -z $n ]] 判断输入的第n个参数是否存在 
+set:显示（设置）shell变量 包括私有变量以及用户变量
+exec: shell的内建命令。 
+
+chpst: 监控某个进程   -u参数 设置进程所属  
+
+
+runit: 
