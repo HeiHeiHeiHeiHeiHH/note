@@ -1,0 +1,18 @@
+是什么？    分布式消息系统。
+
+环境部署： zk + kafka 配置  zk存储kafka服务信息（broker、topic、分区信息、生产者消费者信息等等)
+
+    kafka server 配置（config/server.properties） 默认是单点模式。 需要在其中修改zk的配置项 
+    启动之前需要zk服务支持，若没开启 可以通过脚本快速开启一个单机的zk实例
+	kafka-server-start ../config/zookeeper.properties
+    启动fuwu (bin/): sudo ./kafka-server-start + 配置文件(可加上路径) 
+    建立类别：kafka-topic.sh --create --zookeeper host:port --replication-factor 1 --partitions(多少分区) num --topic topic_name
+    查看类别：kafka-topic.sh --list --zookeeper host:port
+    开启一个类别的生产任务：kafka-console-producer.sh --broker-list host:kafka_port --topic topic_name
+    开启一个类别的消费者：kafka-console-consumer.sh --zookeeper host:port --topic topic_name --from-beginning 
+   
+
+
+    kafka集群配置：复制server配置文件 修改相应的broker.id 这个是个整数 唯一的 port不同。然启动。
+    创建topic：kafka-topic.sh --create --zookeeper host:port --replication-factor(副本数量(flower))  --partitions  --topic 
+    查看某个类的描述：kafka-topic.sh --describe --zookeeper host:port --topic 
