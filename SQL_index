@@ -1,0 +1,27 @@
+mysql中常见的三种索引： index|unique key|primary key
+
+
+查看索引  show index from tb_name ;
+创建索引的三种方式：
+  1 建表是创建
+    index index_name (column_list) === key index_name (column_list)
+    unique index_name (column_list)
+    primary key index_name (column_list)
+
+  2 alter table.
+    alter table tb_name add index index_name (column_list)
+    alter table tb_name add unique index_name (column_list)
+    alter table tb_name add primary key index_name (column_list)
+    删除索引
+    alter table tb_name drop index index_name(删除各类型索引)
+    alter table tb_name drop primary key index_name (只能删除primary类型)
+
+  3 create index.
+    create index index_name on tb_name(column_list)
+    create unique index index_name on tb_name(column_list)
+    不能创建primary index
+    drop index index_name on tb_name
+   
+
+创建索引同样的是建立一个不可见的表相当于  会将所建立索引的数据文件做存储 同样占据内存空间 对于多索引的表进行插入大量的数据 会很慢很慢， 因为不仅更新表数据 还有索引中的信息需要刷新修改，解决方法：删除索引，插入完成后恢复索引 或者 插入之前进行表锁定 插入结束再释放（同时也会有其他问题的出现）
+mysql表碎片的产生：使用变长的字段数据类型。  在对表进行插入更改时  新数据的长度大于原有的设计长度 则会重新取数据块链接存储相应的数据
