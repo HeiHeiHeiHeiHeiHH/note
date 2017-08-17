@@ -252,3 +252,26 @@ PHP多进程与多线程只能运行在cli模式下.
     僵尸进程：当子进程退出后，父进程没有及时回收，保留了子进程的执行状态 
     串行：在需要循环fork进程时，一般情况下必须等待子进程功能结束后在进行新的fork。 通过pnctl_wait($status)获取子进程的执行状态(父进程）。
     并行：循环fork进程时。 通过pnctl_waitpid()  并添加参数WNOHANG, 无需等待子进程的返回状态 直接跳过 进行后续fork 达到并行处理。
+
+
+FLUME：运行的3种模式  
+    Exec Source 直接运行 采用unix command的方式组织数据 快速数据完整性不能保证 单是实时性强
+    Spooling Dirctory SOurce 监测配置的目录下新增的文件  同样有限制 实时性比较强 但是数据完整 限制：1 拷贝到spool下的文件不可以在编辑 2 不可包含相应的子目录
+    Channel方式：MemoryChannel, JDBC Channel ,MemoryRecoverChannel, fileChannel.
+
+    memoryChannel可以实现高速的吞吐，但是无法保证数据的完整性
+    MemoryRecoverChannel使用filechannel代替
+    filechannel保证数据完整性和一致性，不过吞吐慢与memorychannel
+    
+    核心概念：
+	agent:代理 一个机器只有一个agent 可以有多个sources和sinks
+     	Client:生产数据，运行在一个独立的线程
+	Source:从client收集数据，传递给channel
+ 	sink:从channel中收集数据 运行与一个独立的线程
+	channel: 连接source和sinks 数据中间缓存
+ 	Events:可以是日志记录、avro对象等
+
+    将数据推到hdfs时， 在hadoop中重新建立一个新的节点存储
+    使用：在conf中编辑想应的agent、channel、sinks信息
+      运行：/bin/flume-ng agent --conf ../conf -f /path/conf.conf -n agentname -Dflume.root.logger=INFO,console  最后一项为调试模式
+
