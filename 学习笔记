@@ -277,3 +277,6 @@ FLUME：运行的3种模式
 
 
 查看占用端口的进程： sudo lsof -i:port
+
+查看进程是否存在: shell: kill -0 $pid 存在返回0 不存在返回1
+		  php: posix_kill($pis, 0) 存在true
