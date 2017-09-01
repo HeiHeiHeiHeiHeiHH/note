@@ -275,3 +275,5 @@ FLUME：运行的3种模式
     使用：在conf中编辑想应的agent、channel、sinks信息
       运行：/bin/flume-ng agent --conf ../conf -f /path/conf.conf -n agentname -Dflume.root.logger=INFO,console  最后一项为调试模式
 
+
+查看占用端口的进程： sudo lsof -i:port
