@@ -280,3 +280,16 @@ FLUME：运行的3种模式
 
 查看进程是否存在: shell: kill -0 $pid 存在返回0 不存在返回1
 		  php: posix_kill($pis, 0) 存在true
+
+hive表查看分区信息： show partitions table_name;
+
+自动加载类的实现：
+     1 定义两个初始的根目录（项目根目录与vendor根目录,vendor根目录是为了加载使用的组件）
+     2 添加根目录的路径（最好是绝对路径)
+     3 使用spl_autoload_register()函数加载命名空间
+       spl_autoload_register($autoload_callback,$throw,$repend): $1 : 使用回调函数加载 若为空 则使用默认函数注册sql_autoload()
+     4 加载  使用3注册的回调函数进行加载
+       一般过程 获取类所在的命名空间如: \Module\Text
+       转换命名空间为相应的路径： str_replace('\\' , '/', "\Module\Text")
+       搜索每个根目录下是否含有/Module/Text.php 文件 存在 require_once  并判断是否含有该类class_exists("\Module\text",false) 存在return true
+        
