@@ -25,3 +25,37 @@ mysql中常见的三种索引： index|unique key|primary key
 
 创建索引同样的是建立一个不可见的表相当于  会将所建立索引的数据文件做存储 同样占据内存空间 对于多索引的表进行插入大量的数据 会很慢很慢， 因为不仅更新表数据 还有索引中的信息需要刷新修改，解决方法：删除索引，插入完成后恢复索引 或者 插入之前进行表锁定 插入结束再释放（同时也会有其他问题的出现）
 mysql表碎片的产生：使用变长的字段数据类型。  在对表进行插入更改时  新数据的长度大于原有的设计长度 则会重新取数据块链接存储相应的数据
+
+
+
+
+
+GRANTS 用户授权语句
+GRANT priv_type(colums) ON what TO user INDENTIFIED BY "password" WITH GRANT OPTION
+   priv_type : 该用户具有什么样的操作权限：
+            ALL PRIVILEGES: 所有操作权限
+            FILE：不清楚（不适用给用户分配指定的表或列）
+	    RELOAD：重载user表（不适用给用户分配指定的表或列）
+	    ALTER：修改表结构
+	    INDEX：建立索引
+	    SELECT：查询
+	    CREATE：建表
+	    INSERT：插入
+	    SHUTDOWN：关闭mysql服务
+	    DELETE：删除数据表 或 行
+	    PROCESS： 母鸡！
+  	    UPDATE：更新
+	    DROP：删除库！
+	    REFERENCE：母鸡！
+	    USEAGE：母鸡！
+   columns: 权限适用的列
+   what：权限应用级别
+	*.*： 所有库中的所有表（全局）
+	databasename.*:某个数据库中的所有表（数据库级别）
+	databasename.tablename:某个库中的某个表（数据表级别）
+	列级别不知道咋用 = =
+   user: 添加的用户名 格式username@ip_address
+   password: 顾名思义
+   GRANT OPTION :是否具有授予其他用户在指定的权限水平上的任何权限能力 （这个要谨慎)
+
+   然后重新载入授权表, COMMAND: FLUSH PRIVILEGES or mysqladmin flush-privileges or mysqladmin reload

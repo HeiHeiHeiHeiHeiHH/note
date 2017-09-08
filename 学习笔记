@@ -25,7 +25,6 @@ Xdubug  代码调试工具（相比于echo print 等断点， 在不熟悉代码
 依赖管理Composer与packagist
 packagist 安装一般为pear(php-pear   使用现在较少)
 
-
 composer .json文件配置说明  name : "所有者/包名"
 			   description : "包描述  通常一句话"
 			   keywords : "包作用关键字 利于检索"
@@ -227,6 +226,7 @@ mcpd: redis本地连接池。
 		     hg import 文件名  获取修改集 
 		     hg rollback && hg st 查看获取的修改 检查是否所需
 
+开新分支的时候， 注意基于主分支的分支版本是否是最新的代码。 不仅是做一次hg pull default -b default就好，需要一次hg up操作来将本地主干分支代码拉去到最新的位置。
 
 
 对于一个入口文件： 基础功能主要在于定义一些常量，项目路径，路由方法，是否开启调试模式等信息 
@@ -293,3 +293,9 @@ hive表查看分区信息： show partitions table_name;
        转换命名空间为相应的路径： str_replace('\\' , '/', "\Module\Text")
        搜索每个根目录下是否含有/Module/Text.php 文件 存在 require_once  并判断是否含有该类class_exists("\Module\text",false) 存在return true
         
+
+在源码中查找某个函数的c语言实现：
+    查找: grep -rn "PHP_FUNCTION(function_name)" ./php-src/ext/   会返回定义该函数的.h文件路径和实现的.c路径
+
+
+读取文件流中内容:fgets,fread,file_get_contents(); 都很快  = = 慢的是处理获取的内容 file_get_contents() 依次处理所有获取到的内容 另外两个可想～
