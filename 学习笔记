@@ -299,3 +299,11 @@ hive表查看分区信息： show partitions table_name;
 
 
 读取文件流中内容:fgets,fread,file_get_contents(); 都很快  = = 慢的是处理获取的内容 file_get_contents() 依次处理所有获取到的内容 另外两个可想～
+
+重置mysql中自增列的重新计数: TRUNCATE TABLE_NAME;
+
+关于try catch :当try中的执行的代码段出现异常（这里有很多情况）时，而不是什么语句没有执行成功等等。 执行catch模块。
+
+关于事务：mysql的特性：1 原子性(要么都执行，要么都不执行) 2 一致性（状态一致性） 3 隔离性(并发情况下的解决。首先是一个事务执行前的锁表操作，使得其他事务事件不会操作相同的事物表，牺牲一定的处理效率) 4 持久性(事务完成怼系统的营销是永久的）     （succss or faith）
+
+
