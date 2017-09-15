@@ -319,3 +319,22 @@ hive表查看分区信息： show partitions table_name;
 php socket: 
     socket_set_block 设置为阻塞模式 所以我特么读不到！！！
     socket_set_noblock 非阻塞！！！！！！
+
+
+
+PHP STREAM函数:
+    set_socket_blocking:stream_socket_blocking的别名，将该资源的读写方式设置为阻塞.
+    stream_context_create(array $options,array $params): 创建资源流上下文。
+       $options:必须为二维关联数组 默认为空数组
+       $param: 必须为关联数组.
+       example: $opts = array(
+		  "http" => array(
+		    "method" => "POST",
+		    "HEADER" => "....."
+		  )
+		); $context = stream_context_create($opts); $fp = fopen("http://www.example.com","r",$context);
+    
+
+
+    对于阻塞的send：首先需要将数据写入到缓冲区中， 当缓冲区中的空间不够是会继续等待有足够的空间时返回.对于非阻塞 没有空间直接返回一个没有空间的状态回来.
+    对于recv:如果缓冲区中的没有给予一个接受完成的状态它将一直保存receive状态，非阻塞相反。 
