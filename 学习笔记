@@ -338,3 +338,6 @@ PHP STREAM函数:
 
     对于阻塞的send：首先需要将数据写入到缓冲区中， 当缓冲区中的空间不够是会继续等待有足够的空间时返回.对于非阻塞 没有空间直接返回一个没有空间的状态回来.
     对于recv:如果缓冲区中的没有给予一个接受完成的状态它将一直保存receive状态，非阻塞相反。 
+    
+    对于阻塞的server：如何读取缓冲区的内容。 
+         socket_set_block($socket_resource):  socket_recv($resource, $recvData, $length, MSG_EOL); 设置length大小。 MSG_EOL读到结束标志位或者最大长度也就是length。判断接受到的长度是否小于length. 小于则数据已读完。进行以后的操作了. 反之则继续读！！！
