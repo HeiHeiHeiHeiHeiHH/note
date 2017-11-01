@@ -344,3 +344,54 @@ PHP STREAM函数:
 
 
     测试代码（万能的）：register_shutdown_function(function () { var_dump(error_get_last());};
+
+数据库链接池：  首先有使用直连or连接池的开关。
+	每个链接的还是为长链接。 开启默认的链接数量。有最大的链接数量限制。 这会有定期的心跳机制检测。 链接断开时重启 保持一定的链接数量
+	
+  	同一个链接对象 不管是mysql or redis 
+  	
+	将对象保存栈中， 每次有连接请求时 从栈中取出一个已开启的链接 剩余栈中的为剩余可连接数量 如栈中没有且为达到最大的链接数量 则重新建立一个新的链接 若已为最大链接则等待 这里可以有个通知机制
+	当无可用链接时一直等待 若等待时间超过默认时间时返回链接超时 有可用时将通知
+
+
+ 魔术方法：__get()、__set() 将对象的属性接管 需手动添加到类中
+	  
+    example: __set($name,$value)   $obj->$name = $value  Get: $obj->value;
+
+	__call, __callStatis 控制对象的方法/静态方法的调用
+	当调用的方法不存在是产生错误，可以使用__call方法避免 
+        当调用不存在的静态方法时 使用__callStatic (需使用public static 申明)
+
+  	__toString 将对象转换为字符串
+
+	__invoke 将对象当成函数 (5.3.0以上版本有效)
+	__isset() 当对不可访问属性调用isset或empty时调用  当类外部使用isset时调用
+	__unset（）同上 相反的意思
+
+	__sleep() 执行serialize()时 会先调用这个函数
+	类外部使用serialize时使用
+
+	__wakeup() 执行unsialize()时 
+
+	__debugInfo() 打印所需调试的信息 PHP VERSION >= 5.6.0 
+	
+	__autoload() 尝试加载未定义的类 定义这个函数来启用类的自动加载
+
+	__clone() 当对象复制完成是调用
+
+   postfix 邮件服务命令
+       mailq 显示待寄邮件的清单 mailq [-q] -v 显示详细信息
+
+       postsuper -d 邮件编号/ALL 请求队列(所有时,ALL必须大写)
+       
+       queueger 可以删除指定ID号的队列邮件
+
+       postqueue -p 查看队列内容
+
+       postqueue -f 将寄存队列的邮件重新发送一遍
+ 
+       postcat 查看队列中的邮件内容
+
+       postsuper -d ALL hold/deffered... 删除某个队列里的所有邮件
+
+  redis事务中不支持的类型：keys|BLPOP|MSETNX|BRPOP|RPOPLPUSH|BRPOPLPUSH|SMOVE|SINTER|SINTERSTORE|SUNION|SUNIONSTORE|SDIFF|SDIFFSTORE|ZINTER|ZUNION|FLUSHDB|FLUSHALL|RANDOMKEY|SELECT|MOVE|RENAMENX|DBSIZE|BGREWRITEOF|SLAVEOF|SAVE|BGSAVE|LASTSAVE
