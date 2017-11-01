@@ -228,3 +228,13 @@ chpst: 监控某个进程   -u参数 设置进程所属
 
 
 runit: 
+   开启一个进程守护任务 /etc/service/下创建任务目录  cd进去 创建run脚本
+   规则
+
+      进入某个脚本的地址
+      chpst -u USERNAME 指定脚本的运行用户 默认 root用户
+      command filename  执行脚本命令
+   
+   查看状态 sv status name
+   停止服务 sv stop name
+   重启服务 sv restart name
