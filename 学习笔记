@@ -395,3 +395,56 @@ PHP STREAM函数:
        postsuper -d ALL hold/deffered... 删除某个队列里的所有邮件
 
   redis事务中不支持的类型：keys|BLPOP|MSETNX|BRPOP|RPOPLPUSH|BRPOPLPUSH|SMOVE|SINTER|SINTERSTORE|SUNION|SUNIONSTORE|SDIFF|SDIFFSTORE|ZINTER|ZUNION|FLUSHDB|FLUSHALL|RANDOMKEY|SELECT|MOVE|RENAMENX|DBSIZE|BGREWRITEOF|SLAVEOF|SAVE|BGSAVE|LASTSAVE
+
+
+   hadoop配置好后启动： sbin/start-dfs.sh   sbin/start-yarn.sh  bin/hdfs namenode
+   配置文件配置：/etc/hadoop/yarn-site.xml  /etc/hadoop/hdfs-site.xml
+
+   获取浏览器的hadoop服务:http://localhost:50070/
+   验证集群中的所有应用程序:http://localhost:8088/
+
+   hive配置：/hive/conf/ cp hive-env.sh.template hive-env.sh 添加export HADOOP_HOME=/hadoopdir
+
+   配置hive的metastor配置： /hive/conf/hive-site.xml
+     追加：<property>
+		<name>javax.jdo.option.ConnectionURL</name>
+		<value>jdbc:derby://localhost:1527/metastore_db;create=true</value>
+		<description>JDBC connect string for a JDBC metastore</description>
+	   </property>
+
+   创建jpox.properties文件，追加：
+     javax.jdo.PersistenceManagerFactoryClass =
+
+org.jpox.PersistenceManagerFactoryImpl
+org.jpox.autoCreateSchema = false
+org.jpox.validateTables = false
+org.jpox.validateColumns = false
+org.jpox.validateConstraints = false
+org.jpox.storeManagerType = rdbms
+org.jpox.autoCreateSchema = true
+org.jpox.autoStartMechanismMode = checked
+org.jpox.transactionIsolation = read_committed
+javax.jdo.option.DetachAllOnCommit = true
+javax.jdo.option.NontransactionalRead = true
+javax.jdo.option.ConnectionDriverName = org.apache.derby.jdbc.ClientDriver
+javax.jdo.option.ConnectionURL = jdbc:derby://hadoop1:1527/metastore_db;create = true
+javax.jdo.option.ConnectionUserName = APP
+javax.jdo.option.ConnectionPassword = mine
+
+    declare: 接受两种参数。 ticks 或 encoding.
+ 	ticks 当执行n条低级指令时， 调用所注册的方法。 注：条件语句与判断语句一般不算低级指令。
+        encoding: 接下来执行的代码的编码是指定的编码.
+
+    使用共享内存进行通信：  使用ftok()函数建立一个共享内存空间。
+	shmop_open($shm_key, 'c/a/w/n','mode','size'): 打开一个共享内存
+	shmop_read($shm_id, 'start', 'count'): 读取  start 开始位置 count  读取的长度
+ 	shmop_write($shm_id, 'data', 'offset'): 写入 
+	shmop_close($shm_id): 关闭 不会删除共享内存 清除php的缓存
+	shmop_delete($shm_id): 输出共享内存块
+	shmop_size($shm_id):共享内存中的数据长度.
+
+    对共享内存的加锁机制：  使用ftok()函数建立一个共享内存的key
+	sem_get($key): 获取一个信号量资源 $sem_id
+	sem_acquire($sem_id): 获取信号
+	sem_release($sem_id): 释放资源
+	sem_remove($sem_id): 把这次信号量从系统中移除
