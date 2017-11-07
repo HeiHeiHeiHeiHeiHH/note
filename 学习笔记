@@ -448,3 +448,45 @@ javax.jdo.option.ConnectionPassword = mine
 	sem_acquire($sem_id): 获取信号
 	sem_release($sem_id): 释放资源
 	sem_remove($sem_id): 把这次信号量从系统中移除
+    
+    消息队列： 创建一个消息队列区 ftok(__FILE__, 'm') $id
+	msg_get_queue($id):获取消息队列生成 $msg_id
+	msg_send($msg_id, "MSG_TYPE",$message): 先队列中推送消息
+	msg_receive($msg_id,"MSG_TYPE",$msgtype, 'size', $message): 获取队列中的消息，$message
+        
+        队列机制只能有一个进程能获取或写数据 所以不需要额外的锁或者信号量.
+
+    信号：主要通过posix_kill($pid, $signal)向指定的进程传递一个信号量。该进程调用所注册的信号处理函数处理
+	
+    管道：两种有名管道与无名管道， 无名管道只能在具有亲缘关系的进程之间使用，有名管道则在同一物理机上的所有进程都可通行。
+	$pipe_path = "/path/to/file.pipe":定义管道路径
+	判断路径文件是否存在，不存在则posix_mkfifo($pipe_path, '0777')创建管道 return boolean
+	
+	向管道中写数据：$file = fopen($pipe_path，'w'); fwrite($file, $data); 需要关闭吗？？？？？
+	读取：$file = fopen($pipe_path, 'r'); fread（$file,$size); 
+	单向的， 传递的数据是无格式的数据流.
+
+    socket:
+
+
+
+   UDP协议：将数据及源、目的封装在数据包中，不需要建立链接；每个数据包的大小限制在64k以内; 因无连接，是不可靠的;不需要建立连接，所以传输速度快，但容易丢包.
+
+   实现：传输基于Datagramsocket与dataframpacket; 建立发送端与接受端;建立数据包;调用socket的发送接受方法；关闭套接字;发送端和接受端是两个独立的运行程序.
+
+   服务端：stream_socket_server("udp://host:port",$errno, $error):建立
+	   stream_socket_sendto($socket, $data, 0, $adderr):发送
+	   stream_socket_recvfrom($socket, $length, 0, $address):接受
+
+   服务端：stream_socket_client("udp://host:port",$errno, $error):建立 获取句柄
+	   fwrite($hanlder, $data): 写
+	   fread($hanlder, $length): 读
+	   fclose($hanlder): 关闭
+
+
+   引入composer包时产生的自动加载累， 如何引入我们自己写的？
+	composer.json 文件中autoload字段中载入相对路径：path/file.php 或 classmap:相对路径 加载该路径下的 或者采用psr-0规范
+	psr-0: autoload下添加字段psr-0:{"命名空间": "path/"} 对应 \path\命名空间\下的类文件
+	psr-4: autoload下添加字段psr-4:{"命名空间":"path"}
+
+	添加完成后还需执行composer dump-autoload
