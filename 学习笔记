@@ -489,4 +489,7 @@ javax.jdo.option.ConnectionPassword = mine
 	psr-0: autoload下添加字段psr-0:{"命名空间": "path/"} 对应 \path\命名空间\下的类文件
 	psr-4: autoload下添加字段psr-4:{"命名空间":"path"}
 
-	添加完成后还需执行composer dump-autoload
+	添加完成后还需执行composer dump-autoload  如果默认下载的会从国外的镜像中下载速度会很慢 可以在composer global config 中设置成国内镜像 会快很多.
+
+
+ 	并行与并发： 并行是指两个或多个时间在同一时刻发生;并发是指两个或多个事件在同一时间间隔发生。 并行是在不同实体上的多个事件;并发是在同一个实体上的多个事件。
