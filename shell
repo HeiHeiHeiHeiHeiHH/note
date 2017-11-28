@@ -238,3 +238,6 @@ runit:
    查看状态 sv status name
    停止服务 sv stop name
    重启服务 sv restart name
+  
+
+  查看磁盘中文件大小超过某个尺寸的命令： find / -size +100M -exec ls -lh {} \;

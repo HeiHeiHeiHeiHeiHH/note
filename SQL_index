@@ -59,3 +59,4 @@ GRANT priv_type(colums) ON what TO user INDENTIFIED BY "password" WITH GRANT OPT
    GRANT OPTION :是否具有授予其他用户在指定的权限水平上的任何权限能力 （这个要谨慎)
 
    然后重新载入授权表, COMMAND: FLUSH PRIVILEGES or mysqladmin flush-privileges or mysqladmin reload
+   建立数据库的时候指定字符集 create databases db_name default character set utf8bm4 collate utf8_general_ci;
