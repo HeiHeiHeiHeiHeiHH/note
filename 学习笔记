@@ -499,3 +499,12 @@ javax.jdo.option.ConnectionPassword = mine
 
 	日志实现（monolog) 根据配置读取写日志的地址及一些开关 日志方式两种：文本日志，通过udp通信方式传递到指定地址（接受处理再报警）
 	设定日志的等级及抛出异常的机制（差不多都继承与标准异常类）
+	
+	获取redis中的内存分布:
+		1 获取redis当前的快照文件 dump.rdb
+		2 下载sqlite数据库
+		3 将快照文件转换成csv文件	rdb -c memory dymp.rdb > memory.csv
+		4 创建数据库	sqlite3 memory.db 
+		5 根据csv文件创建数据库表 create table memory(....)
+		6 创建导入模式	.mode csv memory
+		7 将文件中的内容导入到数据库	.import memory.csv memory

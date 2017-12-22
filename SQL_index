@@ -31,7 +31,7 @@ mysql表碎片的产生：使用变长的字段数据类型。  在对表进行�
 
 
 GRANTS 用户授权语句
-GRANT priv_type(colums) ON what TO user INDENTIFIED BY "password" WITH GRANT OPTION
+GRANT priv_type(colums) ON what TO user IDENTIFIED BY "password" WITH GRANT OPTION
    priv_type : 该用户具有什么样的操作权限：
             ALL PRIVILEGES: 所有操作权限
             FILE：不清楚（不适用给用户分配指定的表或列）
