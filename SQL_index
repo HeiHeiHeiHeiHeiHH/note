@@ -60,3 +60,8 @@ GRANT priv_type(colums) ON what TO user IDENTIFIED BY "password" WITH GRANT OPTI
 
    然后重新载入授权表, COMMAND: FLUSH PRIVILEGES or mysqladmin flush-privileges or mysqladmin reload
    建立数据库的时候指定字符集 create databases db_name default character set utf8bm4 collate utf8_general_ci;
+
+
+
+
+replace into table_name(columns) values() : 功能与insert类似，不同点在于回去检测是否有相同主键（唯一键)的行，有的话会删除在插入，避免出现有重复的数据。注意必须要有主键(唯一键也oj8k)

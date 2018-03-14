@@ -107,6 +107,7 @@ nowdoc与heredoc区别
 
 打开文件读的方法：
       1 fopen($file, "r+a")  打开一个文件或url. 返回一个对文件本身的引用
+		当mode为w时　　默认是会清空文件的　若不清空　直接用追加模式a 或者 w+a 
         feof($fp) 参数：文件引用。 判断是否读取到文件的最后。
         fclose($fp)  关闭文件引用 释放资源
         fgets($fp, $font-size)  获取文件中的一行内容， 不会超过font-size的大小。  适用读取文本型文件
@@ -508,3 +509,75 @@ javax.jdo.option.ConnectionPassword = mine
 		5 根据csv文件创建数据库表 create table memory(....)
 		6 创建导入模式	.mode csv memory
 		7 将文件中的内容导入到数据库	.import memory.csv memory
+
+	c语言指针加减运算只针对数组指针 其他指针类型是不支持的(或者错误运算)
+    
+	当函数需要返回数组时. 必须已指针的类型返回 (返回数组的首地址,意味着只能已指针地址的形式传递信息, 和很过语言的区别很大 有点头大这地方. 同时函数类型也需申明为某某类型的指针, 接受函数返回值的地方也必须是一个指针变量 - - 存在地址的只能是指针变量 谋解)
+	C语言的库文件 一般在/user/include  /user/local/include 目录下
+	下载库文件的方法: 
+
+
+	有关指针的数据类型的小节:
+		int i:	定义整形变量i
+		int *p: 定义一个指向整形数据的指针变量p
+		int a[n]: 定义一个存放整形数据的数组a 数组长度为n
+		int *p[n]:定义指针数组p, 由n个指向整形的指针元素组成
+		int (*p)[n]: p为一个指向n个以为数组的指针变量
+		int f(): 定义一个返回整数的函数f
+		int *p(): p为一个返回指针的函数, 指针指向整形数据
+		int (*p)(): p为指向函数的指针, 该函数必须返回一个整形数值
+		int **p: p是一个指针变量,指向一个整形数据的指针变量
+	
+
+	void指针变量  定义一个指针变量 但不指定它指向的是那种数据类型
+
+	结构体:
+		格式: struct 结构名
+			  {成员表列};
+		example :
+			struct stu
+			{
+				int num;
+				char name[20];
+				char sex;
+				float score;
+			};	
+		说明方式:
+			1 先定义结构再说明结构变量
+			  struct xxx {......}; struct xxx param1,param2;
+			  也可以用宏先表示一个结构类型
+			  #define STU struct stu
+			  STU
+              {
+				....
+			  };
+
+			  STU param1,param2;
+			2 在定义结构类型的同时说明结构变量
+			  struct xxx { ....} param1, param2;
+
+		    3 直接说明结构变量
+			  struct {....} param1, param2 ...;
+		    可以嵌套使用的哦
+
+			赋值: name.chengyuan = '';
+			初始化:结构变量定义时: param={xxx,xxx,xxxx,....};
+
+			结构数组的定义:将结构变量类型申明为一个数组就ok.
+			遍历通过指针 能节省开销
+
+	gcc编译过程：
+		1 预处理阶段　根据源码的预处理语句　将包含的内容插入到源程序中生成．i文件　　gcc -o test.i -E test.c
+		2 编译阶段　　将源码编译成为汇编文件.s　gcc -o hello.s -S hello.i
+		3 汇编阶段　编译成机器语言.o文件　gcc -o hello.o -c hello.s
+		4 连接阶段　gcc -o test test.s
+		
+		源文件－－>预处理－－>编译/优化－－>汇编－－>链接-->可执行文件。
+
+	清空屏幕的函数为：system("clear"); h文件：stdlib.h   二进制文件打开hexdump
+	
+	
+	
+	
+	declare(ticks = N) 与 pcntl_alarm() 闹钟处理   declare 没执行N条低级指令（也就是N行代码) 执行所注册的函数后再继续
+    闹钟处理， 没执行一条指令就会检测是否有闹钟信号的到来 来了就执行然后再继续.(进程内有效)  
