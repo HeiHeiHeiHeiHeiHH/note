@@ -241,3 +241,52 @@ runit:
   
 
   查看磁盘中文件大小超过某个尺寸的命令： find / -size +100M -exec ls -lh {} \;
+
+
+  关于&&与||:
+    &&:   command1 && command2 && command3 ... 当左边的命令执行结果为真是执行右边的指令
+	||：  command1 || command2 || command3 ... 当左边的命令执行结果为真时右边的指令讲不被执行
+
+
+
+  ${}用法：
+	file=/dir1/dir2/dir3/my.file.txt
+	${file#*/}: 删掉第一个/及其左边的字符串： dir1/dir2/dir3/my.file.txt
+	${file##*/}:删掉最后一个/及其左边的字符串： my.file.txt
+	${file#*.}: 删掉第一个.及其左边的字符串： file.txt
+	${file##*.}:删掉做后一个.及其左边的字符串：txt
+	${file%*/}: 删除最后一个/及其右边的字符串：/dir1/dir2/dir3
+	${file%%*/}:删除第一个/及其右边的字符串：空
+	${file%*.}: 删除最后一个.及其右边的字符串：/dir1/dir2/dir3/my.file
+	${file%%*.}:删除第一个.及其右边的字符串：/dir1/dir2/dir3/my
+
+
+	#是去掉左边（键盘上#在$的左边）
+	%是去掉右边（键盘上%在$的右边）
+	单一符号是最小的匹配;两个符号是最大的匹配
+	${file:0:5}:提取最左边的5个字节：/dir1
+	${file:5:5}:提取第5个字节右边的连续5个字节：/dir2
+	
+	变量的替换：
+	${file/dir/path}:将第一个dir替换为path: /path1/dir2/dir3/my.file.txt
+	${file//dir/path}:所有的dir都将被替换为path:/path1/path2/path3/my.file.txt
+
+	针对不同的变数赋值：
+	${file-my.file.txt}: 假如$file没有设定，则使用my.file.txt作为回传值(空值及非空值时不作处理)
+	${file:-my.file.txt}:假如$file没有设定或者为空，则使用my.file.txt作为回传值(非空不处理)
+	${file+my.file.txt}: 假如$file设为空值或非空值，都使用my.file.txt作为回传值（没设定不处理）
+	${file:+my.file.txt}:假如$file为非空值，则使用my.file.txt作回传值（没设定及空值时不做处理)
+	${file=my.file.txt}: 假如$file没设定，则使用my.file.txt做回传，同事将$file赋值为my.file.txt（空值及非空不受理）
+	${file:=my.file.txt}:假如$file没设定，或设定为空，则使用my.file.txt传回，同时，赋值
+	${file?my.file.txt}: 假如$file没设定，则将my.file.txt输出至STDERR(标准错误输出, 空值与非空不处理)
+	${file:?my.file.txt}:假如$file没设定或为空值，则将my.file.txt输出至标准错误输出STDERR(非空不受理)
+	${#var}:计算出变量的长度
+
+
+
+	nohup(no-hang-up): 不挂断的执行某个脚本。 用法: nohup deamon > nohup.out 2>&1 & 如果为指定重定向的文件路径 将在定向到当前路径下的nohup.out文件中  注意不要关闭终端 先按任一键 退出到bash然后exit 否则会因为session的结束导致进程不会在后台挂起运行.
+
+
+	守护进程： 1 首先fork一个子进程， 并关闭父进程，使子进程成为孤儿进程被init进程接手
+			   2 调用setsid，创建新的session，子进程成为这个session的leader，同时新的session不再与任何的tty关联(所以不会因为tty的关闭导致守护进程的推出，以及该session下的进程退出)
+			   3 ....
