@@ -1,0 +1,26 @@
+<?php
+
+namespace Models\Specification;
+
+class PriceSpecification implements SpecificationInterface {
+	private $maxPrice;
+
+	private $minPrice;
+
+	public function __construct($minPrice, $maxPrice) {
+		$this->maxPrice = $maxPrice;
+		$this->minPrice = $minPrice;
+	}
+
+	public function isStatisfiedBy(Item $item): bool {
+		if ($this->maxPrice !== null && $item->getPrice() > $this->maxPrice) {
+			return false;
+		}
+
+		if ($this->minPrice !== null && $item->getPrice() < $this->minPrice) {
+			return false;
+		}
+
+		return true;
+	}
+}

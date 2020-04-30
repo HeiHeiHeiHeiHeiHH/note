@@ -1,0 +1,47 @@
+创建型设计模式
+	抽象工厂模式	=> AbstractFactory
+	建造者模式		=> Builder
+	工厂方法模式	=> FactoryMethod
+	多例模式		=> Mulititon
+	对象池模式		=> Pool
+	原型模式		=> Prototype
+	简单工厂模式	=> SimpleFactory
+	单例模式		=> Singleton
+	静态工厂模式	=> StaticFacory
+
+结构型设计模式
+	适配器模式		=> Adapter
+	组合模式		=> Composite
+	数据映射模式  	=> DataMapper
+	装饰模式		=> Decorator
+	依赖注入模式	=> DependencyInjection
+	门面模式		=> Facade
+	流接口模式		=> FluentInterface
+	享元模式		=> Flyweight
+	代理模式		=> Proxy
+	注册模式		=> Register
+	桥梁模式		=> Bridge
+
+
+
+行为型设计模式
+	责任链模式		=> ChainOfResponsibilities
+	命令行模式		=> Command
+	迭代器模式		=> Iterator
+	中间者模式		=> Mediator
+	备忘录模式		=> Memento
+	空对象模式		=> NullObject
+	观察者模式		=> Observer
+	规格模式		=> Specification
+	状态模式		=> State
+	策略模式 		=> Strategy
+	模板方法模式	=> TemplateMethod
+	访问者模式		=> Visitor
+
+
+其他类型
+
+	委托模式		=>	Delegation
+	服务定位模式	=>	ServiceLocation
+	资源库模式		=> 	Repository
+	实体属性值模式	=>	EAV
